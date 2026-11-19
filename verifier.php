@@ -7,18 +7,23 @@ exigerConnexion();
 
 function anagramme(string $mot1, string $mot2): bool
 {
-    $mot1 = mb_strtolower(trim($mot1), 'UTF-8');
-    $mot2 = mb_strtolower(trim($mot2), 'UTF-8');
+    $mot1 = strtolower(trim($mot1));
+    $mot2 = strtolower(trim($mot2));
 
-    if ($mot1 === '' || $mot2 === '' || mb_strlen($mot1, 'UTF-8') !== mb_strlen($mot2, 'UTF-8')) {
+    if ($mot1 === '' || $mot2 === '' || strlen($mot1) != strlen($mot2)) {
         return false;
     }
 
-    $lettres1 = preg_split('//u', $mot1, -1, PREG_SPLIT_NO_EMPTY);
-    $lettres2 = preg_split('//u', $mot2, -1, PREG_SPLIT_NO_EMPTY);
-    sort($lettres1);
-    sort($lettres2);
-    return $lettres1 === $lettres2;
+    $compteur1 = array_count_values(str_split($mot1));
+    $compteur2 = array_count_values(str_split($mot2));
+
+    foreach ($compteur1 as $lettre => $nombre) {
+        if (!isset($compteur2[$lettre]) || $nombre !== $compteur2[$lettre]) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 $mot1 = trim((string) ($_POST['mot1'] ?? ''));
@@ -67,10 +72,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if ($erreur): ?><p class="message erreur"><?= htmlspecialchars($erreur) ?></p><?php endif; ?>
     <section class="carte">
         <form method="post">
-            <label for="mot1">String 1</label>
-            <input id="mot1" name="mot1" class="<?= $verification === true ? 'champ-succes' : ($verification === false ? 'champ-erreur' : '') ?>" value="<?= htmlspecialchars($mot1) ?>" required>
-            <label for="mot2">String 2</label>
-            <input id="mot2" name="mot2" class="<?= $verification === true ? 'champ-succes' : ($verification === false ? 'champ-erreur' : '') ?>" value="<?= htmlspecialchars($mot2) ?>" required>
+            <div class="champs-comparaison">
+                <div>
+                    <label for="mot1">String 1</label>
+                    <input id="mot1" name="mot1" class="<?= $verification === true ? 'champ-succes' : ($verification === false ? 'champ-erreur' : '') ?>" value="<?= htmlspecialchars($mot1) ?>" required>
+                </div>
+                <div>
+                    <label for="mot2">String 2</label>
+                    <input id="mot2" name="mot2" class="<?= $verification === true ? 'champ-succes' : ($verification === false ? 'champ-erreur' : '') ?>" value="<?= htmlspecialchars($mot2) ?>" required>
+                </div>
+            </div>
             <button type="submit">Soumettre</button>
         </form>
         <?php if ($verification !== null): ?>

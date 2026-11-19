@@ -19,3 +19,5 @@ th, td { padding: 10px; border-bottom: 1px solid #d1d5db; text-align: left; }
 header { display: flex; align-items: center; justify-content: space-between; }
 nav { display: flex; align-items: center; gap: 14px; }
 nav a { color: #2563eb; }
+.champs-comparaison { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 650px) { .champs-comparaison { grid-template-columns: 1fr; } }
