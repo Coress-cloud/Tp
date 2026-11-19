@@ -51,9 +51,9 @@ Les mots de passe sont stockés avec `password_hash()` et vérifiés avec
 `password_verify()`. Les anciens mots de passe en clair sont convertis lors de
 leur prochaine connexion.
 
-Lors de la déconnexion, les deux pseudonymes du même couple sont supprimés de
-la base. Une nouvelle connexion est ensuite possible uniquement après une
-nouvelle inscription.
+Lors de la déconnexion, la session PHP est détruite. Les utilisateurs restent
+dans la base de données et peuvent se reconnecter avec leur pseudonyme et leur
+mot de passe.
 
 ## Branches
 
