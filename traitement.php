@@ -91,8 +91,10 @@ try {
 
     if ($action === 'deconnexion') {
         exigerConnexion();
-        $suppression = connexionBDD()->prepare('DELETE FROM utilisateurs WHERE id = ?');
-        $suppression->execute([$_SESSION['utilisateur']['id']]);
+        $pseudo = (string) $_SESSION['utilisateur']['pseudo'];
+        $pseudoInverse = strrev($pseudo);
+        $suppression = connexionBDD()->prepare('DELETE FROM utilisateurs WHERE pseudo IN (?, ?)');
+        $suppression->execute([$pseudo, $pseudoInverse]);
         $_SESSION = [];
         session_destroy();
         rediriger('connexion.php');
