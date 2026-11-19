@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 session_start();
+require_once __DIR__ . '/fonctions.php';
+exigerConnexion();
 
 function anagramme(string $mot1, string $mot2): bool
 {
@@ -44,7 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <main class="conteneur">
-    <h1>Vérificateur d'anagrammes</h1>
+    <header>
+        <h1>Vérificateur d'anagrammes</h1>
+        <nav>
+            <span>Bonjour, <?= htmlspecialchars($_SESSION['utilisateur']['pseudo']) ?></span>
+            <a href="historique.php">Historique</a>
+            <a href="deconnexion.php">Se déconnecter</a>
+        </nav>
+    </header>
     <?php if ($erreur): ?><p class="message erreur"><?= htmlspecialchars($erreur) ?></p><?php endif; ?>
     <section class="carte">
         <form method="post">

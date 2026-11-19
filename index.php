@@ -2,5 +2,10 @@
 declare(strict_types=1);
 
 session_start();
-header('Location: verifier.php');
+
+if (isset($_SESSION['utilisateur'])) {
+    header('Location: verifier.php');
+} else {
+    header('Location: connexion.php');
+}
 exit;
