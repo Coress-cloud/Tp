@@ -30,27 +30,6 @@ alors enregistrées dans son historique personnel.
 ### Résultat
 
 ![Vérificateur avec historique](screenshots/resultat.png)
-
-### Base de données
-
-![Table utilisateurs dans phpMyAdmin](screenshots/phpmyadmin-utilisateurs.png)
-
-## Pourquoi les pseudonymes sont inversés
-
-La consigne demande la création de deux comptes lors de l'inscription :
-
-1. le pseudonyme saisi ;
-2. son inverse produit par `strrev()`.
-
-Les deux comptes utilisent exactement le même mot de passe. Ils sont donc
-présents tous les deux dans la table `utilisateurs`. Cette inversion est
-volontaire et ne bloque pas normalement une première connexion : il suffit de
-saisir le pseudonyme exact de l'une des deux lignes.
-
-Lors de la déconnexion, les deux pseudonymes du même couple sont supprimés de
-la base, conformément à la consigne. Une nouvelle connexion est ensuite
-possible uniquement après une nouvelle inscription.
-
 ## Branches
 
 - `main` : application finale.
