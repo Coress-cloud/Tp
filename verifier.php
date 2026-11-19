@@ -33,6 +33,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erreur = 'Utilisez uniquement des lettres et des espaces.';
     } else {
         $verification = anagramme($mot1, $mot2);
+        $requete = connexionBDD()->prepare(
+            'INSERT INTO verifications (utilisateur_id, chaine1, chaine2, resultat)
+             VALUES (?, ?, ?, ?)'
+        );
+        $requete->execute([
+            $_SESSION['utilisateur']['id'],
+            $mot1,
+            $mot2,
+            $verification,
+        ]);
     }
 }
 ?>
