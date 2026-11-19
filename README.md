@@ -18,3 +18,5 @@ alors enregistrées dans son historique personnel.
 - `feature/anagrammes` : formulaire et algorithme.
 - `feature/utilisateurs` : inscription, connexion et déconnexion.
 - `feature/historique` : stockage et consultation de l'historique.
+- `feature/traitement-centralise` : centralisation des traitements.
+- `feature/interface-historique` : formulaire et historique côte à côte.
