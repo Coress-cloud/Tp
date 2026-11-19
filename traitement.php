@@ -57,8 +57,9 @@ try {
             } else {
                 $pdo->beginTransaction();
                 $insertion = $pdo->prepare('INSERT INTO utilisateurs (pseudo, mot_de_passe) VALUES (?, ?)');
-                $insertion->execute([$pseudo, $motDePasse]);
-                $insertion->execute([$pseudoInverse, $motDePasse]);
+                $motDePasseHache = password_hash($motDePasse, PASSWORD_DEFAULT);
+                $insertion->execute([$pseudo, $motDePasseHache]);
+                $insertion->execute([$pseudoInverse, $motDePasseHache]);
                 $pdo->commit();
                 enregistrerMessage('Compte créé. Vous pouvez maintenant vous connecter.', 'succes');
             }
@@ -75,7 +76,24 @@ try {
         $requete->execute([$pseudo]);
         $utilisateur = $requete->fetch();
 
-        if ($utilisateur && hash_equals((string) $utilisateur['mot_de_passe'], $motDePasse)) {
+        $motDePasseValide = false;
+        if ($utilisateur) {
+            $motStocke = (string) $utilisateur['mot_de_passe'];
+            if (password_get_info($motStocke)['algo'] !== 0) {
+                $motDePasseValide = password_verify($motDePasse, $motStocke);
+            } elseif (hash_equals($motStocke, $motDePasse)) {
+                $motDePasseValide = true;
+                $miseAJour = connexionBDD()->prepare(
+                    'UPDATE utilisateurs SET mot_de_passe = ? WHERE id = ?'
+                );
+                $miseAJour->execute([
+                    password_hash($motDePasse, PASSWORD_DEFAULT),
+                    (int) $utilisateur['id'],
+                ]);
+            }
+        }
+
+        if ($motDePasseValide) {
             session_regenerate_id(true);
             $_SESSION['utilisateur'] = [
                 'id' => (int) $utilisateur['id'],
