@@ -4,26 +4,8 @@ declare(strict_types=1);
 session_start();
 require_once __DIR__ . '/fonctions.php';
 
-$message = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $pseudo = trim((string) ($_POST['pseudo'] ?? ''));
-    $motDePasse = (string) ($_POST['mot_de_passe'] ?? '');
-    $requete = connexionBDD()->prepare(
-        'SELECT id, pseudo, mot_de_passe FROM utilisateurs WHERE pseudo = ?'
-    );
-    $requete->execute([$pseudo]);
-    $utilisateur = $requete->fetch();
-
-    if ($utilisateur && hash_equals((string) $utilisateur['mot_de_passe'], $motDePasse)) {
-        session_regenerate_id(true);
-        $_SESSION['utilisateur'] = [
-            'id' => (int) $utilisateur['id'],
-            'pseudo' => $utilisateur['pseudo'],
-        ];
-        rediriger('verifier.php');
-    }
-    $message = 'Pseudonyme ou mot de passe incorrect.';
-}
+$message = $_SESSION['message'] ?? null;
+unset($_SESSION['message']);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -37,8 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <main class="conteneur">
     <section class="carte auth">
         <h1>Connexion</h1>
-        <?php if ($message): ?><p class="message erreur"><?= htmlspecialchars($message) ?></p><?php endif; ?>
-        <form method="post">
+        <?php if ($message): ?><p class="message <?= htmlspecialchars($message['type']) ?>"><?= htmlspecialchars($message['texte']) ?></p><?php endif; ?>
+        <form method="post" action="traitement.php">
+            <input type="hidden" name="action" value="connexion">
             <label for="pseudo">Pseudonyme</label><input id="pseudo" name="pseudo" required>
             <label for="mot_de_passe">Mot de passe</label><input id="mot_de_passe" type="password" name="mot_de_passe" required>
             <button type="submit">Se connecter</button>

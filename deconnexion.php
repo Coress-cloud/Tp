@@ -1,14 +1,16 @@
 <?php
 declare(strict_types=1);
-
-session_start();
-require_once __DIR__ . '/fonctions.php';
-exigerConnexion();
-
-$pdo = connexionBDD();
-$suppression = $pdo->prepare('DELETE FROM utilisateurs WHERE id = ?');
-$suppression->execute([$_SESSION['utilisateur']['id']]);
-
-$_SESSION = [];
-session_destroy();
-rediriger('connexion.php');
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Déconnexion</title>
+</head>
+<body>
+<form id="deconnexion" method="post" action="traitement.php">
+    <input type="hidden" name="action" value="deconnexion">
+</form>
+<script>document.getElementById('deconnexion').submit();</script>
+</body>
+</html>
