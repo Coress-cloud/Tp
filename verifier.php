@@ -11,6 +11,7 @@ unset($_SESSION['verification'], $_SESSION['message']);
 $mot1 = $verification['mot1'] ?? '';
 $mot2 = $verification['mot2'] ?? '';
 $resultat = $verification['resultat'] ?? null;
+$historique = obtenirHistorique();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -31,7 +32,9 @@ $resultat = $verification['resultat'] ?? null;
         </nav>
     </header>
     <?php if ($message): ?><p class="message <?= htmlspecialchars($message['type']) ?>"><?= htmlspecialchars($message['texte']) ?></p><?php endif; ?>
-    <section class="carte">
+    <section class="grille-verification">
+    <div class="carte">
+        <h2>Comparer deux chaînes</h2>
         <form method="post" action="traitement.php">
             <input type="hidden" name="action" value="verifier">
             <div class="champs-comparaison">
@@ -51,6 +54,30 @@ $resultat = $verification['resultat'] ?? null;
                 <?= $resultat ? 'Ces chaînes sont des anagrammes.' : 'Ces chaînes ne sont pas des anagrammes.' ?>
             </p>
         <?php endif; ?>
+    </div>
+    <div class="carte historique-compact">
+        <h2>Historique</h2>
+        <?php if (!$historique): ?>
+            <p>Aucune vérification enregistrée.</p>
+        <?php else: ?>
+            <table>
+                <thead>
+                    <tr><th>String 1</th><th>String 2</th><th>Résultat</th></tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($historique as $ligne): ?>
+                        <?php $ligneEstAnagramme = (bool) (int) $ligne['resultat']; ?>
+                        <tr class="<?= $ligneEstAnagramme ? 'ligne-anagramme' : 'ligne-non-anagramme' ?>">
+                            <td><?= htmlspecialchars($ligne['chaine1']) ?></td>
+                            <td><?= htmlspecialchars($ligne['chaine2']) ?></td>
+                            <td><?= $ligneEstAnagramme ? 'Anagrammes' : 'Non anagrammes' ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+        <p><a href="historique.php">Voir l'historique complet</a></p>
+    </div>
     </section>
 </main>
 </body>

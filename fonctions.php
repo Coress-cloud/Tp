@@ -32,3 +32,15 @@ function exigerConnexion(): void
         rediriger('connexion.php');
     }
 }
+
+function obtenirHistorique(): array
+{
+    $requete = connexionBDD()->prepare(
+        'SELECT chaine1, chaine2, resultat, date_verification
+         FROM verifications
+         WHERE utilisateur_id = ?
+         ORDER BY date_verification DESC'
+    );
+    $requete->execute([$_SESSION['utilisateur']['id']]);
+    return $requete->fetchAll();
+}

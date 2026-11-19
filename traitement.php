@@ -81,6 +81,7 @@ try {
                 'id' => (int) $utilisateur['id'],
                 'pseudo' => $utilisateur['pseudo'],
             ];
+            unset($_SESSION['message']);
             rediriger('verifier.php');
         }
 
